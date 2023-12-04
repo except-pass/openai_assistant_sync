@@ -1,0 +1,8 @@
+streamlit
+openai
+loguru
+python-dotenv
+requests
+PyYAML
+pydantic
+click
