@@ -2,9 +2,9 @@
 
 Tighten your OpenAI Assistant feedback loop.  Simplify datafile, instruction, and config updates. 
 
-## Problem Statement
+## What problem is this solving
 
-When working with the OpenAI Assistant API, managing configurations, syncing datafiles, and updating instructions can become a manual and error-prone process. This script aims to streamline these tasks, making it easier for users to interact with the OpenAI Assistant API and keep their configurations up to date.
+When working with the OpenAI Assistant API, managing configurations, syncing datafiles, and updating instructions can become a manual and error-prone process. This script simplifies these tasks, making it easier to interact with the OpenAI Assistant API and keep configurations up to date.
 
 ## What does it do?
 
@@ -20,22 +20,36 @@ Keep your OpenAI Assistant config, instructions, and datafiles in a local direct
 - **Deleted Files:** Files in the OpenAI Assistant API but not in the local directory will be deleted.
 
 
-## How to Run
-
-### Prerequisites
+## Installation
 
 - Python installed on your machine
+- Set-up and activate a virtual environment
 - Required Python packages (install using `pip install -r requirements.txt`):
 
-### Configuration
+Or you can use docker: `docker pull exceptpass/openai_assistant_sync`.  If you do then you can substitute `python sync.py` with the docker run command everywhere in the rest of this guide.  
 
-1. Either have `OPENAI_API_KEY` in your environment variables, or create a `.env` file in the same directory as the script with your OpenAI API key:
+Docker run: 
+```bash
+docker run --rm --volume "$(pwd):/usr/src/app/" --env OPENAI_API_KEY=${OPENAI_API_KEY} exceptpass/openai_assistant_sync
+```
+
+Or in Windows
+```powershell
+docker run --rm --volume "${PWD}:/usr/src/app/" --env OPENAI_API_KEY=${OPENAI_API_KEY} exceptpass/openai_assistant_sync
+```
+
+## API Key Management
+
+Either have `OPENAI_API_KEY` in your environment variables, or create a `.env` file in the same directory as the script with your OpenAI API key:
 
     ```ini
     OPENAI_API_KEY=your-api-key-here
     ```
 
-2. Customize the assistant configuration and instructions in the `config.yaml` and `instructions.txt` files, respectively.
+If you set-up the `.env` file, you can omit the `--env` part of the docker run command.  The docker volume will automatically pick up your `.env` file.
+
+
+## How to Use 
 
 To initialize a directory locally (without interacting with the OpenAI server), use:
 
@@ -43,7 +57,7 @@ To initialize a directory locally (without interacting with the OpenAI server), 
 python sync.py --dirpath /path/to/your/directory --init
 ```
 
-Changes the configs and instructions in the new directory.  Add datafiles to the `datafiles` directory.
+Edit the configs and instructions in the new directory.  Add datafiles to the `datafiles` directory.
 
 You can perform a dry run to see what changes will be made, without actually modifying or deleting anything.
 
@@ -58,15 +72,7 @@ python sync.py --dirpath /path/to/your/directory --golive
 ```
 
 
-Use the following command to sync the directory with the OpenAI Assistant API:
-
-
-- `--dirpath`: Path to the directory containing the assistant configuration and datafiles.
-- `--golive`: Flag to perform the operation for real. Omitting this flag runs a dry run.
-
-## Script Overview
-
-### Assistant Configuration
+## Assistant Configuration
 
 The script uses a `config.yaml` file to define the OpenAI Assistant configuration. Customize the `name`, `tools`, `model`, and other parameters as needed.
 
@@ -77,30 +83,3 @@ Place your datafiles in the `datafiles` directory. The script will automatically
 ### Instructions
 
 Define your assistant's instructions in the `instructions.txt` file.
-
-## Examples
-
-```bash
-# Sync the directory for real
-python sync.py --dirpath /path/to/your/directory --golive
-
-# Run a dry run (no changes will be applied)
-python sync.py --dirpath /path/to/your/directory
-```
-
-## Docker
-
-The entrypoint is `python sync.py`.
-
-Run with docker on Windows
-
-```powershell
-docker run --rm --volume "${PWD}:/usr/src/app/" --env OPENAI_API_KEY=${OPENAI_API_KEY} exceptpass/openai_assistant_sync --dirpath myassistant --init
-```
-
-or a bash shell
-```bash
-docker run --rm --volume "$(pwd):/usr/src/app/" --env OPENAI_API_KEY=${OPENAI_API_KEY} exceptpass/openai_assistant_sync --dirpath myassistant --init
-```
-
-Note if you made the `.env` file you can omit the `--env` flag.
