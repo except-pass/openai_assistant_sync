@@ -53,7 +53,7 @@ class OpenAIAssistantConfig(BaseModel):
     instructions: Optional[str]=None
     @classmethod
     def from_directory(cls, dirpath):
-        with open(config_path) as f:
+        with open(config_path(dirpath)) as f:
             rawconfig = yaml.safe_load(f)
 
         instructions = load_instructions(dirpath)
